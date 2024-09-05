@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Textbox and Buttons</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .container {
+    margin: 50px auto;
+    text-align: center;
+  }
+  input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .result-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+  textarea {
+    width: 50%;
+    height: 600px;
+    margin-top: 20px;
+    resize: none;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <input type="text" id="textbox" placeholder="Enter text here">
+  <button onclick="countWords()">Count Words</button>
+  <button onclick="clearText()">Clear Text</button>
+  <button onclick="reverseText()">Reverse Text</button>
+</div>
+<div class="result-container">
+  <textarea readonly id="result-textarea"></textarea>
+</div>
+
+<script>
+  function countWords() {
+      function specCharSort(string){
+        let cleanString = '' // Creates empty string to add chars and spaces to
+        for (let char of string){ 
+          if (char != '.'){ // if char is not equal to "." then it adds the character to the cleaned string
+            cleanString += char
+          }
+        }
+        //console.log(cleanString)
+        cleanString = cleanString.trim() // Trims the excess spaces that are left between words and special characters if the string ended with special chars.
+        // For example Hello . At this point it is "Hello " This trim removes the trailing space and it becomes "Hello "
+        //console.log(cleanString)
+        // Now that we have a string of all spaces and chars, we need to remove double spaces for consistency
+        
+        let cleanStringStripped = ''
+        let previousChar = ''
+        for (let char of cleanString) { 
+          //if (char != ' ' && previousChar != ' ')
+          if (!(char === ' ' && previousChar === ' ')) { //If NOT the current char and previous char are equal to " "
+          console.log(cleanStringStripped)  
+          cleanStringStripped += char;
+          }
+          previousChar = char; // Update previousChar for the next iteration
+        }
+        console.log(cleanStringStripped)
+        return cleanStringStripped 
+      }//function end
+    
+    
+    var regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/g;
+    var text = document.getElementById('textbox').value.trim(); // trim Removes all consecutive white space from the beginning and end of the string.
+    var cleanedText = text.replace(regex, '.'); // Replaces every special characters with "."
+    console.log(cleanedText)
+    cleanedText = specCharSort(cleanedText)
+    //console.log(cleanedText + cleanedText.length.toString())
+    if (cleanedText.length > 0) {
+    var wordCount1 = countWordsBySpaces(cleanedText)
+    var wordCount2 = countWordsWithBools(cleanedText)
+    document.getElementById("result-textarea").value = (`V1: ${wordCount1}\nV2: ${wordCount2}`);
+    }
+    else{
+      clearText()
+    }
+  }//function
+
+
+  function countWordsBySpaces(text){
+    let wordCount = 0; // Makes a counter to count the spaces. Each space means a word came before it. 
+     for (let char of text){ // Iterates through the provided text
+        if (char == " "){ 
+          wordCount ++ }} // Increments counter if a space is the current iteration
+          wordCount ++ // Since there is no space at the end, the last word is lost. This line adds the last word.
+          return wordCount
+  }
+  function countWordsWithBools(text){
+    let wordCount = 0 // Makes a counter to count Each time the isWord bool is active while a " " is equal to the current char
+    let isWord = false    // No word yet
+    for (let char of text){ // Iterates through provided text
+      if (char == " "){ // if the char is a " "
+        if (isWord){ //if is word == True (This is a guard clause against double spaces. If there are two " " in a row, it won't increment)
+          wordCount ++
+          isWord = false
+        }
+      }
+      else { // If the current char isn't a space, it must be part of a word, so is word = True
+        isWord = true
+      }
+    }
+    wordCount ++ // Adds for last word since there is no space seperator
+    return wordCount
+  }
+
+
+
+
+  function clearText() {
+    document.getElementById("result-textarea").value = "";
+    document.getElementById("textbox").value = "";
+  }
+
+  function reverseText() {
+    var text = document.getElementById("textbox").value;
+    var reversedText = text.split("").reverse().join("");
+    document.getElementById("textbox").value = reversedText;
+  }
+</script>
+</body>
+</html>
